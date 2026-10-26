@@ -33,12 +33,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <Link href="/" className="text-xl font-bold">
                 Stay Finder
               </Link>
-              <Link
-                href="/host/properties/new"
-                className="text-sm font-medium text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-              >
-                List a stay
-              </Link>
               <AuthHeader/>
             </div>
           </header>
