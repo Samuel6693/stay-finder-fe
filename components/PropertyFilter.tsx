@@ -30,6 +30,7 @@ export default function PropertyFilter({ filter }: PropertyFilterProps) {
   const [search, setSearch] = useState(filter.location || "");
   const [maxPrice, setMaxPrice] = useState(filter.maxPrice || "");
   const [maxGuests, setMaxGuests] = useState(filter.maxGuests || "");
+  const [sort, setSort] = useState(filter.sort || "");
 
   const onFiltering = () => {
     const params = new URLSearchParams();
@@ -41,6 +42,9 @@ export default function PropertyFilter({ filter }: PropertyFilterProps) {
     }
     if (maxGuests) {
       params.set("maxguests", String(maxGuests));
+    }
+    if (sort) {
+      params.set("sort", sort);
     }
     const query = params.toString();
     router.push(query ? `/?${query}` : "/");
@@ -57,7 +61,7 @@ export default function PropertyFilter({ filter }: PropertyFilterProps) {
         onChange={(e) => setMaxPrice(e.target.value)}
         className="w-32 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-zinc-300"
       />
-      
+
       <input
         type="number"
         min={1}
@@ -66,6 +70,16 @@ export default function PropertyFilter({ filter }: PropertyFilterProps) {
         onChange={(e) => setMaxGuests(e.target.value)}
         className="w-28 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-zinc-300"
       />
+
+      <select
+        value={sort}
+        onChange={(e) => setSort(e.target.value)}
+        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-zinc-300"
+      >
+        <option value="">Sort by</option>
+        <option value="price_asc">Price: low to high</option>
+        <option value="price_desc">Price: high to low</option>
+      </select>
 
       <button
         type="button"

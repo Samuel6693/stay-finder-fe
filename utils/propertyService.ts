@@ -4,6 +4,7 @@ export type PropertiesFilter = {
   location?: string;
   maxPrice?: number;
   maxGuests?: number;
+  sort?: string;
 };
 
 export type CreatePropertyState = {
@@ -21,6 +22,7 @@ export async function getProperties({
   location,
   maxPrice,
   maxGuests,
+  sort,
 }: PropertiesFilter = {}): Promise<Property[]> {
   const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/`);
   if (location) {
@@ -32,8 +34,14 @@ export async function getProperties({
   if (maxGuests) {
     url.searchParams.append("maxguests", String(maxGuests));
   }
+  if (sort) {
+    url.searchParams.append("sort", sort);
+  }
   try {
     const response = await fetch(url);
+    if (!response.ok) {
+      return [];
+    }
     const properties: Property[] = await response.json();
     return properties;
   } catch (e) {

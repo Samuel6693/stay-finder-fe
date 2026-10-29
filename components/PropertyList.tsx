@@ -13,10 +13,12 @@ export default async function PropertyList({
   const location = (await searchParams).location?.toString() || "";
   const maxprice = (await searchParams).maxprice?.toString() || "";
   const maxguests = (await searchParams).maxguests?.toString() || "";
+  const sort = (await searchParams).sort?.toString() || "";
   const propertiesFilter: PropertiesFilter = {
     location,
     maxPrice: maxprice ? Number(maxprice) : undefined, // Convert maxPrice to a number if it's provided
     maxGuests: maxguests ? Number(maxguests) : undefined, // Convert maxGuests to a number if it's provided
+    sort,
   };
   const properties = await getProperties(propertiesFilter);
   return (
