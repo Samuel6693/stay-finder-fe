@@ -49,6 +49,9 @@ export default function PropertyBookerCard({ property }: PropertyBookerCard) {
             })
             setError(result.error)
             setBooked(Boolean(result.booked))
+            if (result.booked) {
+                window.dispatchEvent(new Event("bookings-changed"))
+            }
         } finally {
             setPending(false)
         }
