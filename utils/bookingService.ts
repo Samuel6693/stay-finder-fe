@@ -1,4 +1,4 @@
-import type { BookingDates } from '../types/booking';
+import type { BookingDates, Booking } from '../types/booking';
 
 export type BookingsInput = BookingDates & {
     guest_name: string;
@@ -40,4 +40,39 @@ export async function createBooking(
     }
 
     return { booked: true };
+}
+
+export async function getBookings(propertyId: string): Promise<Booking[]> {
+    const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/properties/${propertyId}`,
+        {
+            credentials: "include"
+        },
+    )
+
+    if (!response.ok) {
+        return []
+    }
+
+    return response.json()
+}
+
+export async function deleteBooking(propertyId: string, bookingId: string): Promise<{ error?: string }> {
+    const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/properties/${propertyId}/${bookingId}`,
+        {
+            method: "DELETE",
+            credentials: "include"
+        },
+    )
+
+    if (response.status === 401) {
+        return { error: "You need to be logged in to delete a booking" }
+    }
+
+    if (!response.ok) {
+        return { error: "Failed to delete booking, try again" }
+    }
+
+    return {}
 }
