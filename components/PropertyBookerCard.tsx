@@ -23,6 +23,12 @@ export default function PropertyBookerCard({ property }: PropertyBookerCard) {
     const [pending, setPending] = useState(false)
     const [bookingDates, setBookingDates] = useState<BookingDates>()
 
+    const msPerDay = 1000 * 60 * 60 * 24
+    const nights = bookingDates
+        ? (new Date(bookingDates.check_out).getTime() - new Date(bookingDates.check_in).getTime()) / msPerDay
+        : 0
+    const totalPrice = nights * property.price_per_night
+
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         if (!bookingDates) {
@@ -92,6 +98,11 @@ export default function PropertyBookerCard({ property }: PropertyBookerCard) {
                         className={fieldClassName}
                     />
                 </label>
+                {nights > 0 ? (
+                    <p className="text-sm">
+                        {nights} {nights === 1 ? "night" : "nights"}. Total: {totalPrice} kr
+                    </p>
+                ) : null}
                 {error ? (
                     <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
                 ) : null}
