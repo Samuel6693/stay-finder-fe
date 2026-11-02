@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.18"
   }
   public: {
     Tables: {
@@ -58,80 +58,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "properties"
             referencedColumns: ["property_id"]
-          },
-        ]
-      }
-      books: {
-        Row: {
-          author: string
-          book_id: number
-          copies: number
-          created_at: string
-          description: string
-          genre: string
-          published_year: number
-          title: string
-        }
-        Insert: {
-          author: string
-          book_id?: number
-          copies: number
-          created_at?: string
-          description: string
-          genre: string
-          published_year: number
-          title: string
-        }
-        Update: {
-          author?: string
-          book_id?: number
-          copies?: number
-          created_at?: string
-          description?: string
-          genre?: string
-          published_year?: number
-          title?: string
-        }
-        Relationships: []
-      }
-      loans: {
-        Row: {
-          book_id: number
-          borrower_email: string
-          borrower_name: string
-          created_at: string
-          due_date: string
-          loan_date: string
-          loan_id: number
-          status: string
-        }
-        Insert: {
-          book_id: number
-          borrower_email: string
-          borrower_name: string
-          created_at?: string
-          due_date: string
-          loan_date: string
-          loan_id?: number
-          status?: string
-        }
-        Update: {
-          book_id?: number
-          borrower_email?: string
-          borrower_name?: string
-          created_at?: string
-          due_date?: string
-          loan_date?: string
-          loan_id?: number
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "loans_book_id_fkey"
-            columns: ["book_id"]
-            isOneToOne: false
-            referencedRelation: "books"
-            referencedColumns: ["book_id"]
           },
         ]
       }
