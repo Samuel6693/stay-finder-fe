@@ -18,12 +18,7 @@ function isPropertyKind(value: string): value is PropertyKind {
   return kinds.includes(value as PropertyKind);
 }
 
-export async function getProperties({
-  location,
-  maxPrice,
-  maxGuests,
-  sort,
-}: PropertiesFilter = {}): Promise<Property[]> {
+export async function getProperties({ location, maxPrice, maxGuests, sort }: PropertiesFilter = {}): Promise<Property[]> {
   const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/`);
   if (location) {
     url.searchParams.append("location", location);
@@ -37,32 +32,25 @@ export async function getProperties({
   if (sort) {
     url.searchParams.append("sort", sort);
   }
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      return [];
-    }
-    const properties: Property[] = await response.json();
-    return properties;
-  } catch (e) {
-    return [];
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch properties");
   }
+  const properties: Property[] = await response.json();
+  return properties;
 }
 
 export async function getPropertyById(id: string): Promise<Property | null> {
-  try {
-    const url = new URL(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/${id}`,
-    );
-    const response = await fetch(url);
-    if (!response.ok) {
-      return null;
-    }
-    const property: Property = await response.json();
-    return property;
-  } catch {
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/${id}`);
+  const response = await fetch(url);
+  if (response.status === 404) {
     return null;
   }
+  if (!response.ok) {
+    throw new Error("Failed to fetch property");
+  }
+  const property: Property = await response.json();
+  return property;
 }
 
 export async function createProperty(
