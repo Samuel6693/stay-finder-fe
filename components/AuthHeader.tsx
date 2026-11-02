@@ -7,7 +7,6 @@ import T from "./typography";
 export default function AuthHeader() {
     const auth = useAuth()
 
-    console.log("auth", auth)
     if (auth.loading) {
         return (
             <div>

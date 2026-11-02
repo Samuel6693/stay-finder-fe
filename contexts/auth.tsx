@@ -67,7 +67,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       if (!user) {
         throw "User not found"
       }
-      console.log("user", user)
       setUser(user)
     } catch (e) {
       console.warn("error in getting me", e)
