@@ -67,97 +67,94 @@ export default function MyBookings({ propertyId }: MyBookingsProps) {
         return null
     }
 
-    return (
-        <div className="flex flex-col gap-3">
-            <h2 className="text-lg font-semibold">Your bookings</h2>
-            {error ? <p className="text-sm text-red-600 dark:text-red-400">{error}</p> : null}
-            <ul className="flex flex-col gap-3">
-                {bookings.map((booking) => (
-                    <li
-                        key={booking.booking_id}
-                        className="rounded-xl border border-zinc-200 p-4 text-sm dark:border-zinc-800"
-                    >
-                        {editingId === booking.booking_id ? (
-                            <form onSubmit={(event) => onSave(event, booking.booking_id)} className="flex flex-col gap-3">
-                                <label className="flex flex-col gap-1">
-                                    Check-in
-                                    <input
-                                        name="check_in"
-                                        type="date"
-                                        required
-                                        defaultValue={booking.check_in}
-                                        className={fieldClassName}
-                                    />
-                                </label>
-                                <label className="flex flex-col gap-1">
-                                    Check-out
-                                    <input
-                                        name="check_out"
-                                        type="date"
-                                        required
-                                        defaultValue={booking.check_out}
-                                        className={fieldClassName}
-                                    />
-                                </label>
-                                <label className="flex flex-col gap-1">
-                                    Guests
-                                    <input
-                                        name="guests"
-                                        type="number"
-                                        min={1}
-                                        required
-                                        defaultValue={booking.guests}
-                                        className={fieldClassName}
-                                    />
-                                </label>
-                                {editError ? (
-                                    <p className="text-red-600 dark:text-red-400">{editError}</p>
-                                ) : null}
-                                <div className="flex gap-3">
-                                    <button
-                                        type="submit"
-                                        className="rounded-lg bg-zinc-900 px-3 py-1.5 font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
-                                    >
-                                        Save
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setEditingId(undefined)}
-                                        className="hover:underline"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
+    const ownBookings = bookings.filter((b) => b.user_id === auth.user?.id)
+    const guestBookings = bookings.filter((b) => b.user_id !== auth.user?.id)
+
+    function renderBooking(booking: Booking) {
+        return (
+            <li key={booking.booking_id}
+                className="rounded-xl border border-zinc-200 p-4 text-sm dark:border-zinc-800">
+                {editingId === booking.booking_id ? (
+                    <form onSubmit={(event) => onSave(event, booking.booking_id)} className="flex flex-col gap-3">
+                        <label className="flex flex-col gap-1">
+                            Check-in
+                            <input name="check_in" type="date" required
+                                defaultValue={booking.check_in}
+                                className={fieldClassName} />
+                        </label>
+                        <label className="flex flex-col gap-1">
+                            Check-out
+                            <input name="check_out" type="date" required
+                                defaultValue={booking.check_out}
+                                className={fieldClassName} />
+                        </label>
+                        <label className="flex flex-col gap-1">
+                            Guests
+                            <input name="guests" type="number" min={1} required
+                                defaultValue={booking.guests}
+                                className={fieldClassName} />
+                        </label>
+                        {editError ? (
+                            <p className="text-red-600 dark:text-red-400">{editError}</p>
+                        ) : null}
+                        <div className="flex gap-3">
+                            <button type="submit" className="rounded-lg bg-zinc-900 px-3 py-1.5 font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
+                                Save
+                            </button>
+                            <button type="button"
+                                onClick={() => setEditingId(undefined)}
+                                className="hover:underline">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                ) : (
+                    <>
+                        <p className="font-medium">
+                            Check-in: {booking.check_in} | Check-out: {booking.check_out}
+                        </p>
+                        <p className="text-zinc-600 dark:text-zinc-400">
+                            {booking.guests} {booking.guests === 1 ? "guest" : "guests"}
+                        </p>
+                        {booking.user_id === auth.user?.id ? (
+                            <div className="mt-2 flex gap-3">
+                                <button type="button"
+                                    onClick={() => startEdit(booking.booking_id)}
+                                    className="hover:underline">
+                                    Edit
+                                </button>
+                                <button type="button"
+                                    onClick={() => onDelete(booking.booking_id)}
+                                    className="text-red-600 hover:underline dark:text-red-400">
+                                    Delete
+                                </button>
+                            </div>
                         ) : (
-                            <>
-                                <p className="font-medium">
-                                    Check-in: {booking.check_in} | Check-out: {booking.check_out}
-                                </p>
-                                <p className="text-zinc-600 dark:text-zinc-400">
-                                    {booking.guests} {booking.guests === 1 ? "guest" : "guests"}
-                                </p>
-                                <div className="mt-2 flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => startEdit(booking.booking_id)}
-                                        className="hover:underline"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => onDelete(booking.booking_id)}
-                                        className="text-red-600 hover:underline dark:text-red-400"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </>
+                            <p className="text-zinc-600 dark:text-zinc-400">
+                                Guest: {booking.guest_name}
+                            </p>
                         )}
-                    </li>
-                ))}
-            </ul>
+                    </>
+                )}
+            </li>
+        )
+    }
+
+    return (
+        <div className="flex flex-col gap-6">
+            {error ? <p className="text-sm text-red-600 dark:text-red-400">{error}</p> : null}
+            {ownBookings.length > 0 ? (
+                <div className="flex flex-col gap-3">
+                    <h2 className="text-lg font-semibold">Your bookings</h2>
+                    <ul className="flex flex-col gap-3">{ownBookings.map(renderBooking)}</ul>
+                </div>
+            ) : null}
+            {guestBookings.length > 0 ? (
+                <div className="flex flex-col gap-3">
+                    <h2 className="text-lg font-semibold">Bookings from your guests</h2>
+                    <ul className="flex flex-col gap-3">{guestBookings.map(renderBooking)}</ul>
+                </div>
+            ) : null}
         </div>
     )
 }
