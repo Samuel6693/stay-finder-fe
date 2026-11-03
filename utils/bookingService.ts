@@ -35,6 +35,11 @@ export async function createBooking(
         return { error: body.errors[0][1] };
     }
 
+    if (response.status === 409) {
+        const body = await response.json();
+        return { error: body.errors[0][1] };
+    }
+
     if (!response.ok) {
         return { error: "Failed to create booking, try again" };
     }
@@ -83,6 +88,11 @@ export async function updateBooking(
     }
 
     if (response.status === 400) {
+        const body = await response.json()
+        return { error: body.errors[0][1] }
+    }
+
+    if (response.status === 409) {
         const body = await response.json()
         return { error: body.errors[0][1] }
     }
