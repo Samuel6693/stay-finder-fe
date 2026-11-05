@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f7f2;
+  --foreground: #18201b;
+  --surface: #ffffff;
+  --muted: #667068;
+  --line: #dde2dc;
+  --brand: #1f6f50;
+  --brand-dark: #15543c;
+  --accent: #e9a86a;
 }
 
 @theme inline {
@@ -12,15 +18,47 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  min-height: 100%;
+}
+
+::selection {
+  background: #cde5d9;
+  color: #123c2c;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  transition: border-color 160ms ease, box-shadow 160ms ease, color 160ms ease,
+    background-color 160ms ease, transform 160ms ease;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(31, 111, 80, 0.2);
+  outline-offset: 2px;
+}
+
+.rdp-root {
+  --rdp-accent-color: var(--brand);
+  --rdp-accent-background-color: #e6f1ec;
+  width: 100%;
+}
+
+.rdp-months,
+.rdp-month {
+  width: 100%;
+}
+
+.rdp-month_grid {
+  width: 100%;
 }

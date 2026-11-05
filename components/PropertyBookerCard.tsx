@@ -8,8 +8,8 @@ import { useAuth } from "@/contexts/auth"
 import BookingPicker from "./BookingPicker"
 import { createBooking } from "@/utils/bookingService"
 
-const cardClassName = "block rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-600"
-const fieldClassName = "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-zinc-300"
+const cardClassName = "rounded-3xl border border-[#dce2dc] bg-white p-5 shadow-[0_18px_60px_rgba(31,55,43,0.11)] sm:p-6"
+const fieldClassName = "w-full rounded-xl border border-[#d5dcd6] bg-[#fbfcfa] px-3.5 py-2.5 text-sm text-[#202923] outline-none placeholder:text-[#909891] focus:border-[#1f6f50] focus:ring-3 focus:ring-[#1f6f50]/10"
 
 type PropertyBookerCard = {
     property: Property
@@ -57,16 +57,18 @@ export default function PropertyBookerCard({ property }: PropertyBookerCard) {
         }
     }
     if (auth.loading) {
-        return <div className={cardClassName}>Loading...</div>
+        return <div className={`${cardClassName} h-72 animate-pulse bg-[#edf0ec]`} aria-label="Loading booking form" />
     }
 
     if (!auth.user) {
         return (
             <div className={cardClassName}>
-                <p className="mb-3">Log in to book this stay.</p>
-                <div className="flex items-center gap-3">
-                    <Link href="/auth/login">Log in</Link>
-                    <Link href="/auth/register">Register</Link>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#1f6f50]">Ready when you are</p>
+                <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-[#202923]">Book this stay</h2>
+                <p className="mt-3 text-sm leading-6 text-[#667068]">Log in or create an account to choose your dates.</p>
+                <div className="mt-6 flex items-center gap-3">
+                    <Link href="/auth/login" className="rounded-full bg-[#1f6f50] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#15543c]">Log in</Link>
+                    <Link href="/auth/register" className="rounded-full border border-[#cfd6d0] px-5 py-2.5 text-sm font-bold text-[#374139] hover:border-[#1f6f50] hover:text-[#1f6f50]">Register</Link>
                 </div>
             </div>
         )
@@ -74,13 +76,22 @@ export default function PropertyBookerCard({ property }: PropertyBookerCard) {
 
     return (
         <div className={cardClassName}>
-            <BookingPicker initialDates={bookingDates} selectDates={setBookingDates} />
-            <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-4">
-                <label className="flex flex-col gap-1 text-sm">
+            <div className="mb-5 flex items-end justify-between gap-4">
+                <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#667068]">From</p>
+                    <p className="mt-1 text-2xl font-bold text-[#202923]">{property.price_per_night} kr</p>
+                </div>
+                <p className="pb-1 text-sm text-[#667068]">per night</p>
+            </div>
+            <div className="border-y border-[#e2e6e2] py-4">
+                <BookingPicker initialDates={bookingDates} selectDates={setBookingDates} />
+            </div>
+            <form onSubmit={onSubmit} className="mt-5 flex flex-col gap-4">
+                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#374139]">
                     Name
                     <input name="guest_name" required className={fieldClassName} />
                 </label>
-                <label className="flex flex-col gap-1 text-sm">
+                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#374139]">
                     Email
                     <input
                         name="guest_email"
@@ -90,7 +101,7 @@ export default function PropertyBookerCard({ property }: PropertyBookerCard) {
                         className={fieldClassName}
                     />
                 </label>
-                <label className="flex flex-col gap-1 text-sm">
+                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#374139]">
                     Guests
                     <input
                         name="guests"
@@ -102,20 +113,21 @@ export default function PropertyBookerCard({ property }: PropertyBookerCard) {
                     />
                 </label>
                 {nights > 0 ? (
-                    <p className="text-sm">
-                        {nights} {nights === 1 ? "night" : "nights"}. Total: {totalPrice} kr
-                    </p>
+                    <div className="flex items-center justify-between rounded-xl bg-[#eef4f0] px-4 py-3 text-sm">
+                        <span className="text-[#566159]">{nights} {nights === 1 ? "night" : "nights"}</span>
+                        <span className="font-bold text-[#1f6f50]">{totalPrice} kr total</span>
+                    </div>
                 ) : null}
                 {error ? (
-                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                    <p className="rounded-xl bg-red-50 px-3.5 py-3 text-sm text-red-700">{error}</p>
                 ) : null}
                 {booked ? (
-                    <p className="text-sm text-green-600 dark:text-green-400">Booking created.</p>
+                    <p className="rounded-xl bg-emerald-50 px-3.5 py-3 text-sm font-medium text-emerald-700">Booking created.</p>
                 ) : null}
                 <button
                     type="submit"
                     disabled={pending}
-                    className="w-fit rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900"
+                    className="w-full rounded-full bg-[#1f6f50] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#15543c] disabled:opacity-60"
                 >
                     {pending ? "Booking…" : "Book"}
                 </button>
