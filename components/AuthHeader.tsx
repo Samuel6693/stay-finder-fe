@@ -2,40 +2,42 @@
 
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth";
-import T from "./typography";
 
 export default function AuthHeader() {
     const auth = useAuth()
 
     if (auth.loading) {
         return (
-            <div>
-                <T.Header>Loading...</T.Header>
-            </div>
+            <div className="h-9 w-40 animate-pulse rounded-full bg-[#e7eae5]" aria-label="Loading account" />
         )
     }
 
     return (
-        <div>
+        <nav aria-label="Account navigation">
             {!auth.user && (
-                <div className="flex items-center gap-3">
-                    <T.Header>Not logged in</T.Header>
-                    <Link href="/auth/login">Log in</Link>
-                    <Link href="/auth/register">Register</Link>
+                <div className="flex items-center gap-2 sm:gap-3">
+                    <Link href="/auth/login" className="rounded-full px-3 py-2 text-sm font-semibold text-[#374139] hover:bg-white">
+                        Log in
+                    </Link>
+                    <Link href="/auth/register" className="rounded-full bg-[#1f6f50] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#15543c]">
+                        Register
+                    </Link>
                 </div>
             )}
             {auth.user && (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                     <Link
                         href="/host/properties/new"
-                        className="text-sm font-medium text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+                        className="hidden rounded-full border border-[#cfd6d0] bg-white px-4 py-2 text-sm font-semibold text-[#374139] shadow-sm hover:border-[#1f6f50] hover:text-[#1f6f50] sm:block"
                     >
                         List a stay
                     </Link>
-                    <T.Header>Logged in {auth.user.email}</T.Header>
-                    <button type="button" onClick={() => auth.logout()}>Log out</button>
+                    <span className="hidden max-w-48 truncate text-sm text-[#667068] lg:block">{auth.user.email}</span>
+                    <button type="button" onClick={() => auth.logout()} className="rounded-full px-3 py-2 text-sm font-semibold text-[#374139] hover:bg-white">
+                        Log out
+                    </button>
                 </div>
             )}
-        </div>
+        </nav>
     )
 }

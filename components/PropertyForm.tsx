@@ -1,10 +1,11 @@
 "use client";
 
-import { SubmitEvent, useState, type FormEvent } from "react";
+import { SubmitEvent, useState } from "react";
 import type { CreatePropertyState } from "@/utils/propertyService";
 
 const fieldClassName =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-zinc-300";
+  "w-full rounded-xl border border-[#d5dcd6] bg-[#fbfcfa] px-4 py-3 text-sm text-[#202923] outline-none focus:border-[#1f6f50]";
+const labelClassName = "flex flex-col gap-1.5 text-sm font-semibold text-[#374139]";
 
 export type PropertyFormValues = {
   title?: string;
@@ -45,8 +46,8 @@ export default function PropertyForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
-      <label className="flex flex-col gap-1 text-sm">
+    <form onSubmit={onSubmit} className="flex flex-col gap-5">
+      <label className={labelClassName}>
         Title
         <input
           name="title"
@@ -55,7 +56,7 @@ export default function PropertyForm({
           className={fieldClassName}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
+      <label className={labelClassName}>
         Description
         <textarea
           name="description"
@@ -65,7 +66,7 @@ export default function PropertyForm({
           className={fieldClassName}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
+      <label className={labelClassName}>
         Location
         <input
           name="location"
@@ -74,7 +75,7 @@ export default function PropertyForm({
           className={fieldClassName}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
+      <label className={labelClassName}>
         Kind
         <select
           name="kind"
@@ -90,7 +91,7 @@ export default function PropertyForm({
         </select>
       </label>
       <div className="grid grid-cols-2 gap-4">
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClassName}>
           Max guests
           <input
             name="max_guests"
@@ -101,7 +102,7 @@ export default function PropertyForm({
             className={fieldClassName}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClassName}>
           Price per night
           <input
             name="price_per_night"
@@ -114,12 +115,12 @@ export default function PropertyForm({
         </label>
       </div>
       {error ? (
-        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
       ) : null}
       <button
         type="submit"
         disabled={pending}
-        className="w-fit rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900"
+        className="w-fit rounded-full bg-[#1f6f50] px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#15543c] disabled:opacity-60"
       >
         {pending ? pendingLabel : submitLabel}
       </button>
